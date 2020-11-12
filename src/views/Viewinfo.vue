@@ -12,28 +12,28 @@
       <div class="listinfo">
         <h2 class="titleStyle">剧目介绍</h2>
         <p>
-          剧目类型：{{ list.reportoire.m_type }}
+          剧目类型：{{ list.repertoire.m_type }}
         </p>
         <p>
-          剧目题材：{{ list.reportoire.m_characteristic }}
+          剧目题材：{{ list.repertoire.m_characteristic }}
         </p>
         <p>
-          剧目特点：{{ list.reportoire.m_theme }}
+          剧目特点：{{ list.repertoire.m_theme }}
         </p>
         <p>
-          剧中角色：{{ list.reportoire.m_role }}
+          剧中角色：{{ list.repertoire.m_role }}
         </p>
         <p>
-          剧目受众：{{ list.reportoire.m_audience }}
+          剧目受众：{{ list.repertoire.m_audience }}
         </p>
         <p>
-          演出幕数：{{ list.reportoire.m_number }}
+          演出幕数：{{ list.repertoire.m_number }}
         </p>
         <p>
-          剧目时长：{{ list.reportoire.m_time }}
+          剧目时长：{{ list.repertoire.m_time }}
         </p>
         <p>
-          演出团队{{ list.reportoire.m_team }}
+          演出团队{{ list.repertoire.m_team }}
         </p>
         <p><h2 class="titleStyle">剧目概况：</h2></p>
         <p>
@@ -53,7 +53,7 @@
         <h2 class="titleStyle">剧照欣赏：</h2>
         </p>
         <div class="infoImage">
-          <div v-for="item in list.images">
+          <div v-for="item in list.imagesInfo">
             <img  :src="item" alt="" @load="loadImage" :key="item">
           </div>
         </div>
@@ -93,7 +93,6 @@ export default {
           type: 'video/webm'
         }],
         poster: "image/zhu01.png", //你的封面地址
-        // width: document.documentElement.clientWidth,
         notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
         controlBar: {
           timeDivider: true,
@@ -102,35 +101,6 @@ export default {
           fullscreenToggle: true  //全屏按钮
         }
       },
-      // listImage: [
-      //     "http://www.bjtongyilingxiu.com/static/index/images/001.png",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/002.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/003.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/004.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/005.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/006.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/007.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/008.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/009.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/010.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu1.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu2.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu3.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu4.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu5.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu6.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu7.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/baixuegongzhu8.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya2.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya3.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya4.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya5.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya6.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya7.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya8.jpg",
-      //   "http://www.bjtongyilingxiu.com/static/index/images/chouxiaoya9.jpg",
-      // ],
       timer: null
     }
   },
@@ -139,16 +109,15 @@ export default {
     Scroll,
   },
   created() {
-    get("/api/view",{
+    get("/api/interface/iphone/view",{
       "id": this.id
     }
     ).then(res => {
       this.list = res.data[0]
-      console.log(this.list);
-      this.list.subject = eval('(' + this.list.subject + ')');
-      this.list.reportoire = eval('(' + this.list.reportoire + ')');
-      this.list.introduction = eval('(' + this.list.introduction + ')');
-      this.list.images = this.list.images.split('+');
+      this.list.imagesInfo = []
+      for (let i=0; i<this.list.images.info.length;i++) {
+        this.list.imagesInfo.push(this.list.images.info[i].url)
+      }
     }).catch(err => {
       console.log(err);
     })

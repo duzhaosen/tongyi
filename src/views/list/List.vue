@@ -1,7 +1,7 @@
 <template>
 <div class="list">
   <div class="listITem" @click="viewClick(item.id)" v-for="item in list">
-    <img v-lazy="item.image" :key="item.image"  alt="item.title">
+    <img v-lazy="item.image[0]" :key="item.image[0]"  alt="item.title">
     <p>{{item.title}}</p>
   </div>
 </div>
@@ -19,9 +19,16 @@ export default {
     }
   },
   created() {
-    get("/api/list",""
+    get("/api/interface/iphone/list",""
     ).then(res => {
       this.list = res.data
+      for (let i=0; i<this.list.length; i++) {
+        var image = this.list[i].image.info;
+        this.list[i].image = [];
+        for (let t= 0; t<Object.keys(image).length; t++) {
+          this.list[i].image.push(image[t].url)
+        }
+      }
     }).catch(err => {
       console.log(err);
     })
